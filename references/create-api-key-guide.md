@@ -60,11 +60,15 @@ Use the helper diagnostic, HTTP status, API error payload, and `python scripts/f
 
 Tell the user:
 
+> **Free access notice:** FinNotes currently offers 6 months of Pro membership for free during development. Users can use this API for free under the Pro allowance, including daily full news retrieval and data access. Applications for this free Pro access close on **January 1, 2027**. To claim it, sign in or register at the FinNotes website, open the Subscribe page, and click the free 6-month Pro membership application button. The Pro membership is applied immediately after approval.
+>
+> **Grandfathering:** When the free-access program closes, **existing unexpired Pro subscriptions remain valid through their original 6-month term** — access is not retroactively shortened. Only sign-ups after the 2027-01-01 cutoff are subject to post-Beta pricing.
+
 To use live FinNotes API data, create an API key at:
 
 https://platform.finnotes.com/api-keys
 
-In the API Keys page:
+After the Pro membership is active, open the API Keys page:
 
 1. Sign in to your FinNotes account.
 2. Create a new key. The key name can be any user-facing label, such as `Production server`.

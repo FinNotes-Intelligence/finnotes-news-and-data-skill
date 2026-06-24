@@ -15,6 +15,7 @@ from typing import Any
 
 DEFAULT_CREDENTIALS = Path.home() / ".finnotes" / "credentials.env"
 DEFAULT_API_BASE = "https://api.finnotes.com/v1"
+DEFAULT_USER_AGENT = "FinNotes-Agent-Skill/0.1 (+https://platform.finnotes.com)"
 
 
 def _read_env_file(path: Path) -> dict[str, str]:
@@ -98,6 +99,7 @@ def main() -> int:
     headers = {
         "Accept": "application/json",
         "Authorization": f"Bearer {api_key}",
+        "User-Agent": DEFAULT_USER_AGENT,
     }
     if body is not None:
         headers["Content-Type"] = "application/json"
@@ -112,6 +114,14 @@ def main() -> int:
         if exc.code == 401:
             print(
                 "FINNOTES_KEY_REJECTED: read references/create-api-key-guide.md",
+                file=sys.stderr,
+            )
+            if error_body:
+                print(error_body)
+            return 4
+        if exc.code == 403 and "cloudflare" in error_body.lower():
+            print(
+                "FINNOTES_CLOUDFLARE_ACCESS_DENIED: request signature blocked before FinNotes API handled the request",
                 file=sys.stderr,
             )
             if error_body:

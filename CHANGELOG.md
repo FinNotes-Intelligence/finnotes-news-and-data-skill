@@ -2,6 +2,36 @@
 
 All notable changes to this skill are recorded here. Versioning follows [SemVer](https://semver.org/).
 
+## [0.2.0] — 2026-06-24
+
+Protocol revamp + news helper. SKILL.md is rewritten around an explicit Control-Plane / Execution-Branch / Routing-Matrix / Output-Protocol structure (designed for stricter agent-runtime parsing) and a dedicated `finnotes_news.py` script replaces ad-hoc `finnotes_request.py GET "/news?…"` invocations for the common news workflows.
+
+### Added
+- `scripts/finnotes_news.py` — single helper that wraps all the news intents:
+  - `1` / `<N>` — today's or last-N-days summary list
+  - `full` — every today's article in full body (uses the new `/v1/news/today/full` bundle endpoint)
+  - `date YYYY-MM-DD` — single-date summary
+  - `detail <id>` / `detail <type> <slug>` — single-article detail
+  - `--type all,market-news,chart-news,column-article` and `--limit N` query refinements
+- `finnotes_request.py` and `finnotes_news.py` both set a `User-Agent: FinNotes-Agent-Skill/0.1` header (replacing the default `Python-urllib`), so platform analytics can see real skill traffic.
+- Cloudflare `403` handling: when the WAF blocks a request before it reaches FinNotes, both scripts emit `FINNOTES_CLOUDFLARE_ACCESS_DENIED` / `CLOUDFLARE_ACCESS_DENIED` instead of the generic `PERMISSION_REQUIRED` (so the agent doesn't tell users to fix permissions when the problem is the firewall).
+
+### Changed
+- **SKILL.md is completely rewritten** with a routing protocol the agent runtime follows literally:
+  - Section 1 — control plane (when to execute, when to read references, phase-1 vs phase-2 conversation pacing, negative-restraint rule against re-fetching after `full`).
+  - Section 2 — command-syntax table mapping user intent to exact `finnotes_news.py` invocation.
+  - Section 3 — exception-routing matrix.
+  - Section 4 — output protocol (immediate delivery, identifiers exposed in Phase 1, full implications in Phase 2).
+- **Skill name changed**: `Global_Market_News_and_Data_Researcher_pack_(FinNotes)` → `finnotes-global-market-news-and-data-researcher-pack` (kebab-case, lowercase — required for OpenAI Skills indexing). Agent runtimes that resolved the old name MUST update their `$<name>` references.
+- **Description adds an EXCLUSION clause**: skill is now explicitly marked off-limits for entertainment / pop-culture / sports / celebrity topics. Routing systems should not invoke FinNotes for those intents.
+- `agents/openai.yaml` `display_name`, `short_description`, and `default_prompt` updated to match the new manifest.
+- `references/create-api-key-guide.md` now leads with the **Free access notice** (6-month Pro free, cutoff 2027-01-01) and a **Grandfathering clause** (existing unexpired subscriptions keep their full term after the program closes).
+- `references/api-platform-contract.md` and `references/platform-guide-for-ai.md` re-synced from the live docs at https://platform.finnotes.com/docs/for-ai/ — they now include the `/v1/news/today/full` bundled endpoint added in the v0.1.1 cycle.
+
+### Notes
+- Backwards-incompatible at the SKILL-name level. Agents that auto-detected the skill from the previous capitalized/underscored name will need a one-time re-registration. If your runtime caches `default_prompt`, refresh it.
+- Scripts still use Python 3 stdlib only — no third-party dependencies, ~125 KB total.
+
 ## [0.1.1] — 2026-06-24
 
 Snapshot refresh for the `GET /v1/news/today/full` bundled endpoint added to the platform.

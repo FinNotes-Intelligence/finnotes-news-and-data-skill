@@ -1,7 +1,7 @@
 # FinNotes Agent Skill
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Skill version](https://img.shields.io/badge/skill-v0.1.1-orange.svg)](CHANGELOG.md)
+[![Skill version](https://img.shields.io/badge/skill-v0.2.0-orange.svg)](CHANGELOG.md)
 [![API status](https://img.shields.io/badge/api-finnotes.com%2Fv1-green.svg)](https://api.finnotes.com/v1/health)
 
 Drop-in skill mount for AI agent runtimes (Claude Code, Codex, OpenClaw, and any agent that reads project-local `skills/` folders) so the agent can call the [FinNotes commercial API](https://platform.finnotes.com) without you ever pasting `fnp_` keys into chat.
@@ -20,11 +20,12 @@ references/                  # Snapshots of the FinNotes machine-readable docs
 scripts/                     # Python tools the skill invokes
   store_finnotes_key.py      # Import a downloaded Agent JSON handoff
   finnotes_request.py        # Make a /v1/* call with the stored key (key stays out of model context)
+  finnotes_news.py           # News-specific helper — summaries, today/full, detail, type filter
   finnotes_profile.py        # Show non-secret key metadata (prefix, plan, permissions)
   delete_finnotes_handoff.py # Delete the original downloaded handoff JSON (with --confirmed gate)
 ```
 
-Total size: ~120 KB. Zero runtime dependencies — every script uses only the Python 3 standard library.
+Total size: ~125 KB. Zero runtime dependencies — every script uses only the Python 3 standard library.
 
 ## Quick start
 
@@ -79,10 +80,21 @@ The `~/.finnotes/` files persist; only the downloaded copy in Downloads/ goes aw
 
 ### 4. Make a request
 
-The agent (not you) runs:
+The agent (not you) runs **`finnotes_news.py`** for the common news workflows:
 
 ```bash
-python scripts/finnotes_request.py GET "/news?range=today&type=all"
+python scripts/finnotes_news.py 1                          # today's summary
+python scripts/finnotes_news.py full                       # every today's article in full
+python scripts/finnotes_news.py 7                          # last 7 days summary
+python scripts/finnotes_news.py date 2026-06-20            # specific-date summary
+python scripts/finnotes_news.py detail mn_174              # one article by id
+python scripts/finnotes_news.py detail market-news <slug>  # one article by type+slug
+```
+
+For non-news endpoints (data series, reports, account, etc.) it falls back to the generic helper:
+
+```bash
+python scripts/finnotes_request.py GET "/data-series/categories"
 ```
 
 The key stays in `credentials.env`. The agent only sees the API response body — not the secret.
@@ -108,7 +120,7 @@ If a `references/*` file in this skill drifts from the live doc, the live doc wi
 
 ## Versioning
 
-This skill is at `v0.1.1` — snapshot refresh release. Expect breaking changes before `v1.0.0`. The platform API contract itself is stable; what may change here is script CLI shape, error-code naming, and skill-manifest schema.
+This skill is at `v0.2.0` — protocol revamp + news helper. Expect breaking changes before `v1.0.0`. The platform API contract itself is stable; what may change here is script CLI shape, error-code naming, and skill-manifest schema.
 
 See [CHANGELOG.md](CHANGELOG.md).
 
