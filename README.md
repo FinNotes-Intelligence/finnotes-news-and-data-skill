@@ -4,7 +4,7 @@
 [![Skill version](https://img.shields.io/badge/skill-v0.2.1-orange.svg)](CHANGELOG.md)
 [![API status](https://img.shields.io/badge/api-finnotes.com%2Fv1-green.svg)](https://api.finnotes.com/v1/health)
 
-Drop-in skill mount for AI agent runtimes (Claude Code, Codex, OpenClaw, and any agent that reads project-local `skills/` folders) so the agent can call the [FinNotes commercial API](https://platform.finnotes.com) without you ever pasting `fnp_` keys into chat.
+Professional global market news + financial data, packaged as an **AI Agent Skill** for Claude Code, Codex, OpenClaw, and any project-skill-aware runtime. Your agent calls the [FinNotes commercial API](https://platform.finnotes.com) directly — real-time news, macroeconomic data series, and analyst columns — while your `fnp_` API key stays in `~/.finnotes/credentials.env` (mode 0600) and never enters the chat or the model's context.
 
 ## What this skill ships
 
