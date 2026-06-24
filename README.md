@@ -6,6 +6,11 @@
 
 Professional global market news + financial data, packaged as an **AI Agent Skill** for Claude Code, Codex, OpenClaw, and any project-skill-aware runtime. Your agent calls the [FinNotes commercial API](https://platform.finnotes.com) directly — real-time news, macroeconomic data series, and analyst columns — while your `fnp_` API key stays in `~/.finnotes/credentials.env` (mode 0600) and never enters the chat or the model's context.
 
+> [!NOTE]
+> **FinNotes is in Beta — Pro is free for 6 months.** Every new account that signs up **before 2027-01-01** receives a complimentary 6-month Pro subscription, which includes the API quota this skill consumes. No payment required during the Beta window.
+>
+> When the Beta program ends, **existing unexpired Pro subscriptions remain valid through their original 6-month term** — your access is not retroactively shortened. Only new sign-ups after the cutoff date will be subject to the post-Beta pricing.
+
 ## What this skill ships
 
 ```text
@@ -52,11 +57,6 @@ Or download the release tarball from the [Releases page](https://github.com/FinN
 ### 2. Mint an API key
 
 Sign in at [platform.finnotes.com/api-keys](https://platform.finnotes.com/api-keys) and click **Create New Key**. In the one-time-secret modal, click **`Download Agent JSON`** to download the structured handoff file (`finnotes-agent-key-<name>.json`).
-
-> [!NOTE]
-> **FinNotes is in Beta — Pro is free for 6 months.** Every new account that signs up **before 2027-01-01** receives a complimentary 6-month Pro subscription, which includes the API quota this skill consumes. No payment required during the Beta window.
->
-> When the Beta program ends, **existing unexpired Pro subscriptions remain valid through their original 6-month term** — your access is not retroactively shortened. Only new sign-ups after the cutoff date will be subject to the post-Beta pricing.
 
 ### 3. Hand the key off to your agent
 
